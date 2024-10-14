@@ -39,6 +39,37 @@ public class PropertiesReader {
         return result;
     }
 
+    public static int getMultiplyChance(OrganismType type) {
+        String value;
+        if(type == OrganismType.PLANT) {
+            value = getProperty("multiplyChance." + type.toString().toLowerCase());
+        }else {
+            value = getProperty("multiplyChance.animal");
+        }
+        try {
+            int result = Integer.parseInt(value);
+            if(result < 0) {
+                throw new IllegalArgumentException("Multiply Chance of " + type + " in properties file cannot be negative");
+            }
+            return result;
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Failed to parse multiply chance from properties file for " + type + ": " + e.getMessage());
+        }
+    }
+
+    public static int getMaxTriesOfMultiply() {
+        String value = getProperty("multiplyMaxTries.animal");
+        try {
+            int result = Integer.parseInt(value);
+            if(result < 0) {
+                throw new IllegalArgumentException("Max tries of Multiply in properties file cannot be negative");
+            }
+            return result;
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Failed to parse max tries of Multiply in properties file" + e.getMessage());
+        }
+    }
+
     public static String getEmojiOfOrganism(OrganismType type) {
         String value = getProperty("emoji." + type.toString().toLowerCase());
         if(value.isEmpty() || value.isBlank()) {

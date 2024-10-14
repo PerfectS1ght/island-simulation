@@ -1,5 +1,6 @@
 package ru.javarush.feoktistov.entity.organisms;
 
+import ru.javarush.feoktistov.entity.Location;
 import ru.javarush.feoktistov.util.OrganismType;
 import ru.javarush.feoktistov.util.PropertiesReader;
 
@@ -14,9 +15,12 @@ public abstract class Organism {
     protected int maxCount;
     protected String emoji;
 
+    protected final int multiplyChance;
+
     protected Organism(OrganismType type) {
         this.type = type;
         this.id = UUID.randomUUID().toString();
+        this.multiplyChance = PropertiesReader.getMultiplyChance(type);
         this.weight = PropertiesReader.getWeightOfOrganism(type);
         this.maxCount = PropertiesReader.getMaxCountOfOrganism(type);
         this.emoji = PropertiesReader.getEmojiOfOrganism(type);
@@ -26,35 +30,39 @@ public abstract class Organism {
         return type;
     }
 
-    protected String getId() {
+    public String getId() {
         return id;
     }
 
-    protected double getWeight() {
+    public int getMultiplyChance() {
+        return multiplyChance;
+    }
+
+    public double getWeight() {
         return weight;
     }
 
-    protected int getMaxCount() {
+    public int getMaxCount() {
         return maxCount;
     }
 
-    protected String getEmoji() {
+    public String getEmoji() {
         return emoji;
     }
 
-    protected void setType(OrganismType type) {
+    public void setType(OrganismType type) {
         this.type = type;
     }
 
-    protected void setWeight(double weight) {
+    public void setWeight(double weight) {
         this.weight = weight;
     }
 
-    protected void setMaxCount(int maxCount) {
+    public void setMaxCount(int maxCount) {
         this.maxCount = maxCount;
     }
 
-    protected void setEmoji(String emoji) {
+    public void setEmoji(String emoji) {
         this.emoji = emoji;
     }
 
@@ -90,8 +98,9 @@ public abstract class Organism {
         this.weight -= weight;
     }
 
-/*
-    protected abstract void multiply();
-    protected abstract void die();
-*/
+
+    public abstract void multiply(Location location);
+
+    public abstract void die(Location location);
+
 }

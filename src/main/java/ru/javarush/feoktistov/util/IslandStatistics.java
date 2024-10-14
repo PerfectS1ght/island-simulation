@@ -5,7 +5,6 @@ import ru.javarush.feoktistov.entity.Location;
 import ru.javarush.feoktistov.entity.organisms.Animal;
 import ru.javarush.feoktistov.entity.organisms.plants.Plant;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,6 +31,31 @@ public class IslandStatistics {
         resetStatistics();
     }
 
+    public static int quantityOfOrganismTypeOnLocation(OrganismType type, Location location){
+        int counter = 0;
+        if(type == OrganismType.PLANT) {
+            return location.getPlants().size();
+        }else{
+            List<Animal> animals = location.getAnimals();
+            for(Animal animal: animals) {
+                if(animal.getType() == type) {
+                    counter++;
+                }
+            }
+        }
+        return counter;
+    }
+
+    public static void printStatisticsLocation(Location location) {
+        System.out.print("Количество травы и животных на локации: | ");
+        for(OrganismType type: OrganismType.values()) {
+            String emoji = PropertiesReader.getEmojiOfOrganism(type);
+            int quantity = quantityOfOrganismTypeOnLocation(type, location);
+            System.out.print(emoji + " - " + quantity + " | ");
+        }
+        System.out.println();
+    }
+
     private static void collectStatistics(Location[][] locations) {
         for(Location[] locationArray: locations) {
             for(Location location: locationArray) {
@@ -55,7 +79,7 @@ public class IslandStatistics {
             OrganismType key = pair.getKey();
             Integer value = pair.getValue();
             String emojiOfOrganism = PropertiesReader.getEmojiOfOrganism(key);
-            System.out.print(emojiOfOrganism + "-" + value + " | ");
+            System.out.print(emojiOfOrganism + " - " + value + " | ");
         }
         System.out.println();
     }

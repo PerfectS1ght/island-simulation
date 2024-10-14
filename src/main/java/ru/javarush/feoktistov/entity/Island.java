@@ -29,4 +29,12 @@ public class Island {
             }
         }
     }
+
+    public void growPlantsOnLocs() {
+        for(int i = 0; i < locations.length; i++) {
+            for(int j = 0; j < locations[i].length; j++) {
+                locations[i][j].growPlants();
+            }
+        }
+    }
 }
