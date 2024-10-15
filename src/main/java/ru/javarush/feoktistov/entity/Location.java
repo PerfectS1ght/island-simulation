@@ -1,7 +1,7 @@
 package ru.javarush.feoktistov.entity;
 
 import ru.javarush.feoktistov.entity.organisms.Animal;
-import ru.javarush.feoktistov.entity.organisms.plants.Plant;
+import ru.javarush.feoktistov.entity.organisms.Organism;
 import ru.javarush.feoktistov.repository.AnimalFactory;
 import ru.javarush.feoktistov.repository.PlantFactory;
 import ru.javarush.feoktistov.util.IslandStatistics;
@@ -9,62 +9,65 @@ import ru.javarush.feoktistov.util.OrganismType;
 import ru.javarush.feoktistov.util.PropertiesReader;
 import ru.javarush.feoktistov.util.Randomizer;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Location {
 
-    private final List<Animal> animals;
-    private final List<Plant> plants;
-    private final List<Animal> bornAnimals;
+    private final int positionY;
+    private final int positionX;
+    private final Map<OrganismType, List<Organism>> population;
 
-    public Location() {
-        this.animals = new ArrayList<>();
-        this.plants = new ArrayList<>();
-        this.bornAnimals = new ArrayList<>();
+    public Location(int i, int j) {
+        this.positionY = i;
+        this.positionX = j;
+        this.population = new EnumMap<>(OrganismType.class);
     }
 
-    public List<Animal> getAnimals() {
-        return animals;
+    public int getPositionY() {
+        return positionY;
     }
 
-    public List<Plant> getPlants() {
-        return plants;
+    public int getPositionX() {
+        return positionX;
     }
 
-    public List<Animal> getBornAnimals() {
-        return bornAnimals;
+    public Map<OrganismType, List<Organism>> getPopulation() {
+        return population;
     }
 
     public void initializeLocation() {
         for(OrganismType type: OrganismType.values()) {
-            int maxCountOfType = PropertiesReader.getMaxCountOfOrganism(type);
-            int countToAdd = Randomizer.getRandomInt(maxCountOfType);
+            int randomCount = Randomizer.getRandomInt(PropertiesReader.getMaxCountOfOrganism(type));
+            List<Organism> organisms = new ArrayList<>(randomCount);
             if(type == OrganismType.PLANT) {
-                for(int i = 0; i < countToAdd; i++) {
-                    plants.add(PlantFactory.createPlant(type));
+                for(int i = 0; i < randomCount; i++) {
+                    organisms.add(PlantFactory.createPlant(type));
                 }
             }else{
-                for(int i = 0; i < countToAdd; i++) {
-                    animals.add(AnimalFactory.createAnimal(type));
+                for(int i = 0; i < randomCount; i++) {
+                    organisms.add(AnimalFactory.createAnimal(type));
                 }
             }
+            population.put(type, organisms);
         }
     }
 
     public void growPlants() {
+        List<Organism> plants = population.get(OrganismType.PLANT);
         for(int i = 0; i < plants.size(); i++) {
             plants.get(i).multiply(this);
         }
     }
 
     public void multiplyAnimals() {
-        for(int i = 0; i < animals.size(); i++) {
-            animals.get(i).multiply(this);
-            animals.addAll(bornAnimals);
-            bornAnimals.clear();
+        for(OrganismType type: population.keySet()) {
+            if(type != OrganismType.PLANT) {
+                List<Organism> organisms = population.get(type);
+                for(int i = 0; i < organisms.size(); i++) {
+                    organisms.get(i).multiply(this);
+                }
+            }
         }
-
     }
 
     public boolean isPlantCapacityReached() {

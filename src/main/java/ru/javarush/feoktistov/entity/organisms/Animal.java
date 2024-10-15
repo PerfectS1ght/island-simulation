@@ -7,6 +7,8 @@ import ru.javarush.feoktistov.util.OrganismType;
 import ru.javarush.feoktistov.util.PropertiesReader;
 import ru.javarush.feoktistov.util.Randomizer;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public abstract class Animal extends Organism {
@@ -66,29 +68,27 @@ public abstract class Animal extends Organism {
         if(currentCountThisTypeInLocation == this.getMaxCount()) {
             return;
         }
+        List<Organism> organisms = location.getPopulation().get(this.getType());
+        List<Animal> bornAnimals = new ArrayList<>();
         int readyToAdd = this.getMaxCount() - currentCountThisTypeInLocation;
         int counterOfBorn = 0;
         int counterOfTries = 0;
-        for(Animal animal: location.getAnimals()) {
-            if(this.type == animal.getType()) {
-                if(counterOfBorn == readyToAdd || counterOfTries == this.getMaxTriesToMultiply()) {
-                    break;
-                }
-                if(Randomizer.canDoIt(this.getMultiplyChance())) {
-                    location.getBornAnimals().add(AnimalFactory.createAnimal(this.type));
-                    counterOfBorn++;
-                }
-                counterOfTries++;
+        for(Organism organism: organisms) {
+            if(this.getId().equals(organism.getId())){
+                continue;
             }
+            if(counterOfBorn == readyToAdd || counterOfTries == this.getMaxTriesToMultiply()) {
+                    break;
+            }
+            if(Randomizer.canDoIt(this.getMultiplyChance())) {
+                    bornAnimals.add(AnimalFactory.createAnimal(this.type));
+                    counterOfBorn++;
+            }
+            counterOfTries++;
         }
-
+        organisms.addAll(bornAnimals);
+        bornAnimals.clear();
     }
-
-    @Override
-    public void die(Location location) {
-        location.getAnimals().remove(this);
-    }
-
 
     public void eat() {
 

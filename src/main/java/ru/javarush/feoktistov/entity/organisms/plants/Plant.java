@@ -6,9 +6,10 @@ import ru.javarush.feoktistov.repository.PlantFactory;
 import ru.javarush.feoktistov.util.OrganismType;
 import ru.javarush.feoktistov.util.Randomizer;
 
+import java.util.List;
+import java.util.Map;
 
 public class Plant extends Organism {
-
 
     public Plant() {
         super(OrganismType.PLANT);
@@ -20,14 +21,9 @@ public class Plant extends Organism {
             return;
         }
         if(Randomizer.canDoIt(this.getMultiplyChance())) {
-            location.getPlants().add(PlantFactory.createPlant(OrganismType.PLANT));
+            Map<OrganismType, List<Organism>> population = location.getPopulation();
+            population.get(this.getType()).add(PlantFactory.createPlant(this.getType()));
         }
     }
-
-    @Override
-    public void die(Location location) {
-        location.getPlants().remove(this);
-    }
-
 
 }

@@ -9,5 +9,4 @@ public class GameStarter {
     public void start() {
         island.fillOutIslandByLocations();
     }
-
 }

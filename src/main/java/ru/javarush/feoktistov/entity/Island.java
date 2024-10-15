@@ -24,17 +24,17 @@ public class Island {
     public void fillOutIslandByLocations() {
         for(int i = 0; i < locations.length; i++) {
             for(int j = 0; j < locations[i].length; j++) {
-                locations[i][j] = new Location();
+                locations[i][j] = new Location(i, j);
                 locations[i][j].initializeLocation();
             }
         }
     }
 
-    public void growPlantsOnLocs() {
-        for(int i = 0; i < locations.length; i++) {
-            for(int j = 0; j < locations[i].length; j++) {
-                locations[i][j].growPlants();
-            }
-        }
-    }
+//    public void growPlantsOnLocs() {
+//        for(int i = 0; i < locations.length; i++) {
+//            for(int j = 0; j < locations[i].length; j++) {
+//                locations[i][j].growPlants();
+//            }
+//        }
+//    }
 }

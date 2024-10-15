@@ -4,6 +4,8 @@ import ru.javarush.feoktistov.entity.Location;
 import ru.javarush.feoktistov.util.OrganismType;
 import ru.javarush.feoktistov.util.PropertiesReader;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -100,7 +102,9 @@ public abstract class Organism {
 
 
     public abstract void multiply(Location location);
-
-    public abstract void die(Location location);
+    public void die(Location location) {
+        Map<OrganismType, List<Organism>> population = location.getPopulation();
+        population.get(this.getType()).remove(this);
+    }
 
 }
