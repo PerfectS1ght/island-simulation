@@ -19,4 +19,9 @@ public class Randomizer {
         int chance = getRandomInt(100);
         return chance < probabilityToDoSomething;
     }
+
+    public static int[] getRandomDirection() {
+        int[][] directions = {{-1, 0}, {1, 0}, {0,-1}, {0,1}, {-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
+        return directions[Randomizer.getRandomInt(directions.length - 1)];
+    }
 }

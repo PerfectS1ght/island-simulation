@@ -70,6 +70,30 @@ public class Location {
         }
     }
 
+    public void eatAnimals() {
+        for(OrganismType type: population.keySet()) {
+            if(type != OrganismType.PLANT) {
+                List<Organism> organisms = population.get(type);
+                for(int i = 0; i < organisms.size(); i++) {
+                    Animal animal = (Animal) organisms.get(i);
+                    animal.eat(this);
+                }
+            }
+        }
+    }
+
+    public void moveAnimals() {
+        for(OrganismType type: population.keySet()) {
+            if(type != OrganismType.PLANT) {
+                List<Organism> organisms = population.get(type);
+                for(int i = 0; i < organisms.size(); i++) {
+                    Animal animal = (Animal) organisms.get(i);
+                    animal.move(this);
+                }
+            }
+        }
+    }
+
     public boolean isPlantCapacityReached() {
         int quantityOfPlants = IslandStatistics.quantityOfOrganismTypeOnLocation(OrganismType.PLANT, this);
         int maxCountOfPlants = PropertiesReader.getMaxCountOfOrganism(OrganismType.PLANT);

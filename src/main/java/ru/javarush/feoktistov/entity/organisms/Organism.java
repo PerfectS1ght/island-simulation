@@ -100,11 +100,11 @@ public abstract class Organism {
         this.weight -= weight;
     }
 
-
-    public abstract void multiply(Location location);
     public void die(Location location) {
         Map<OrganismType, List<Organism>> population = location.getPopulation();
         population.get(this.getType()).remove(this);
     }
+
+    public abstract void multiply(Location location);
 
 }

@@ -5,12 +5,14 @@ import ru.javarush.feoktistov.util.PropertiesReader;
 public class Island {
 
     private static final Island instance = new Island();
+    private final int LENGTH;
+    private final int WIDTH;
     private final Location[][] locations;
 
     private Island() {
-        int length = PropertiesReader.getLengthOfIsland();
-        int width = PropertiesReader.getWidthOfIsland();
-        locations = new Location[width][length];
+        this.LENGTH = PropertiesReader.getLengthOfIsland();
+        this.WIDTH = PropertiesReader.getWidthOfIsland();
+        locations = new Location[WIDTH][LENGTH];
     }
 
     public static Island getInstance() {
@@ -30,11 +32,25 @@ public class Island {
         }
     }
 
-//    public void growPlantsOnLocs() {
-//        for(int i = 0; i < locations.length; i++) {
-//            for(int j = 0; j < locations[i].length; j++) {
-//                locations[i][j].growPlants();
-//            }
-//        }
-//    }
+    public void startLifeInLocs() {
+        for(int i = 0; i < locations.length; i++) {
+            for(int j = 0; j < locations[i].length; j++) {
+                locations[i][j].eatAnimals();
+                locations[i][j].multiplyAnimals();
+                locations[i][j].moveAnimals();
+            }
+        }
+    }
+
+    public Location getLocationByCoordinates(int i, int j) {
+        if(i < 0 || i >= WIDTH || j < 0 || j >= LENGTH) {
+            return null;
+        }
+        return locations[i][j];
+    }
+
+    public boolean isLocationExistsByCoordinates(int i, int j) {
+        return i >= 0 && i < WIDTH && j >= 0 && j < LENGTH;
+    }
+
 }

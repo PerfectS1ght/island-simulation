@@ -1,5 +1,6 @@
 package ru.javarush.feoktistov.entity.organisms;
 
+import ru.javarush.feoktistov.entity.Island;
 import ru.javarush.feoktistov.entity.Location;
 import ru.javarush.feoktistov.repository.AnimalFactory;
 import ru.javarush.feoktistov.util.IslandStatistics;
@@ -9,6 +10,7 @@ import ru.javarush.feoktistov.util.Randomizer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public abstract class Animal extends Organism {
@@ -90,10 +92,65 @@ public abstract class Animal extends Organism {
         bornAnimals.clear();
     }
 
-    public void eat() {
+    public void eat(Location location) {
+        double eatenFood = 0;
+        Map<OrganismType, List<Organism>> population = location.getPopulation();
+        for(Map.Entry<OrganismType, List<Organism>> pair: population.entrySet()) {
+            if(!isStillHungry(eatenFood)) {
+                break;
+            }
+            OrganismType key = pair.getKey();
+            int chanceToEat;
+            if(this.getType() == key || (chanceToEat = PropertiesReader.getProbabilityOfOrganismEating(this.getType(), key)) == 0) {
+                continue;
+            }
+            List<Organism> organisms = pair.getValue();
+            for(int i = 0; i < organisms.size(); i++) {
+                Organism organism = organisms.get(i);
+                if(Randomizer.canDoIt(chanceToEat)) {
+                    eatenFood += organism.getWeight();
+                    organism.die(location);
+                    if(!isStillHungry(eatenFood)) {
+                        break;
+                    }
+                }
+            }
+        }
+        this.increaseWeight(eatenFood);
+    }
 
+    public void move(Location location) {
+        Island island = Island.getInstance();
+        int distance = Randomizer.getRandomInt(this.getSpeed());
+        if(distance == 0) {
+            return;
+        }
+        int count = 0;
+        int currentI = location.getPositionY();
+        int currentJ = location.getPositionX();
+        Location targetLocation = null;
+
+        while(count < distance) {
+            int[] directions = Randomizer.getRandomDirection();
+            int newI = currentI + directions[0];
+            int newJ = currentJ + directions[1];
+
+            if(island.isLocationExistsByCoordinates(newI, newJ)) {
+                currentI = newI;
+                currentJ = newJ;
+                targetLocation = island.getLocationByCoordinates(currentI, currentJ);
+                count++;
+            }
+        }
+        this.die(location);
+        Map<OrganismType, List<Organism>> population = targetLocation.getPopulation();
+        population.get(this.getType()).add(this);
+    }
+
+    private boolean isStillHungry(double eatenFood) {
+        double requiredEat = this.getRequiredFoodWeight();
+        return requiredEat > eatenFood;
     }
 
 
-//    protected abstract void move();
 }
