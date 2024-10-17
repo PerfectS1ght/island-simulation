@@ -10,12 +10,7 @@ import ru.javarush.feoktistov.util.PropertiesReader;
 
 public class Main {
     public static void main(String[] args) {
-//        SimulationStarter simulationStarter = new SimulationStarter();
-//        simulationStarter.start();
-
-        GameStarter gameStarter = new GameStarter();
-        gameStarter.start();
-
-
+        SimulationStarter simulationStarter = new SimulationStarter();
+        simulationStarter.start();
     }
 }

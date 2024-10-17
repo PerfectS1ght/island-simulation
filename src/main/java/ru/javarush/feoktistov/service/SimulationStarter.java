@@ -36,7 +36,7 @@ public class SimulationStarter {
     public void startLifeCircle(Location[][] locations) {
         for(int i = 0; i < locations.length; i++) {
             for(int j = 0; j < locations[i].length; j++) {
-                lifeCircleService.scheduleWithFixedDelay(new LifeCircleTask(locations[i][j]), 0, 2, TimeUnit.SECONDS);
+                lifeCircleService.scheduleWithFixedDelay(new LifeCircleTask(locations[i][j]), 0, 1, TimeUnit.MILLISECONDS);
             }
         }
     }

@@ -53,14 +53,14 @@ public class Location {
         }
     }
 
-    public synchronized void growPlants() {
+    public void growPlants() {
         List<Organism> plants = population.get(OrganismType.PLANT);
         for(int i = 0; i < plants.size(); i++) {
             plants.get(i).multiply(this);
         }
     }
 
-    public synchronized void multiplyAnimals() {
+    public void multiplyAnimals() {
         for(OrganismType type: population.keySet()) {
             if(type != OrganismType.PLANT) {
                 List<Organism> organisms = population.get(type);
@@ -73,7 +73,7 @@ public class Location {
         }
     }
 
-    public synchronized void eatAnimals() {
+    public void eatAnimals() {
         for(OrganismType type: population.keySet()) {
             if(type != OrganismType.PLANT) {
                 List<Organism> organisms = population.get(type);
@@ -85,7 +85,7 @@ public class Location {
         }
     }
 
-    public synchronized void moveAnimals() {
+    public void moveAnimals() {
         for(OrganismType type: population.keySet()) {
             if(type != OrganismType.PLANT) {
                 List<Organism> organisms = population.get(type);
@@ -97,10 +97,10 @@ public class Location {
         }
     }
 
-    public synchronized void animalsFeelsHungry() {
+    public void animalsFeelsHungry() {
         for(OrganismType type: population.keySet()) {
             if(type != OrganismType.PLANT) {
-                double weightLosesPerDay = (PropertiesReader.getWeightOfOrganism(type) * PropertiesReader.getPercentOfWeightLosesPerDay())/100;
+                double weightLosesPerDay = (PropertiesReader.getWeightOfOrganism(type) * PropertiesReader.getPercentOfWeightLosesPerDay());
                 List<Organism> organisms = population.get(type);
                 for(int i = 0; i < organisms.size(); i++) {
                     Animal animal = (Animal) organisms.get(i);
