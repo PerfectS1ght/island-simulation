@@ -3,15 +3,9 @@ package ru.javarush.feoktistov.entity.organisms;
 import ru.javarush.feoktistov.entity.Island;
 import ru.javarush.feoktistov.entity.Location;
 import ru.javarush.feoktistov.repository.AnimalFactory;
-import ru.javarush.feoktistov.util.IslandStatistics;
-import ru.javarush.feoktistov.util.OrganismType;
-import ru.javarush.feoktistov.util.PropertiesReader;
-import ru.javarush.feoktistov.util.Randomizer;
+import ru.javarush.feoktistov.util.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public abstract class Animal extends Organism {
 
@@ -66,10 +60,10 @@ public abstract class Animal extends Organism {
 
     @Override
     public void multiply(Location location) {
-        int currentCountThisTypeInLocation = IslandStatistics.quantityOfOrganismTypeOnLocation(this.getType(), location);
-        if(currentCountThisTypeInLocation == this.getMaxCount()) {
+        if(IslandStatistics.isLocationFullOfThisType(this.getType(), location)) {
             return;
         }
+        int currentCountThisTypeInLocation = IslandStatistics.quantityOfOrganismTypeOnLocation(this.getType(), location);
         List<Organism> organisms = location.getPopulation().get(this.getType());
         List<Animal> bornAnimals = new ArrayList<>();
         int readyToAdd = this.getMaxCount() - currentCountThisTypeInLocation;
@@ -95,28 +89,41 @@ public abstract class Animal extends Organism {
     public void eat(Location location) {
         double eatenFood = 0;
         Map<OrganismType, List<Organism>> population = location.getPopulation();
-        for(Map.Entry<OrganismType, List<Organism>> pair: population.entrySet()) {
-            if(!isStillHungry(eatenFood)) {
+
+        // Проходим по всем типам организмов в популяции
+        for (Map.Entry<OrganismType, List<Organism>> pair : population.entrySet()) {
+            if (!isStillHungry(eatenFood)) {
                 break;
             }
+
             OrganismType key = pair.getKey();
             int chanceToEat;
-            if(this.getType() == key || (chanceToEat = PropertiesReader.getProbabilityOfOrganismEating(this.getType(), key)) == 0) {
+
+            // Пропускаем, если тип совпадает или вероятность поедания равна 0
+            if (this.getType() == key || (chanceToEat = PropertiesReader.getProbabilityOfOrganismEating(this.getType(), key)) == 0) {
                 continue;
             }
+
+            // Используем Iterator для удаления организмов
             List<Organism> organisms = pair.getValue();
-            for(int i = 0; i < organisms.size(); i++) {
-                Organism organism = organisms.get(i);
-                if(Randomizer.canDoIt(chanceToEat)) {
+            Iterator<Organism> iterator = organisms.iterator();
+
+            while (iterator.hasNext()) {
+                Organism organism = iterator.next();
+
+                // Проверяем, может ли животное поедать данный организм
+                if (Randomizer.canDoIt(chanceToEat)) {
                     eatenFood += organism.getWeight();
-                    organism.die(location);
-                    if(!isStillHungry(eatenFood)) {
-                        break;
+                    iterator.remove(); // Удаляем организм из списка
+
+                    if (!isStillHungry(eatenFood)) {
+                        break; // Если животное больше не голодно, выходим из цикла
                     }
                 }
             }
         }
-        this.increaseWeight(eatenFood);
+
+        this.increaseWeight(eatenFood); // Увеличиваем вес животного на количество съеденной пищи
     }
 
     public void move(Location location) {
@@ -142,6 +149,10 @@ public abstract class Animal extends Organism {
                 count++;
             }
         }
+        if(IslandStatistics.isLocationFullOfThisType(this.getType(), location)) {
+            return;
+        }
+
         this.die(location);
         Map<OrganismType, List<Organism>> population = targetLocation.getPopulation();
         population.get(this.getType()).add(this);

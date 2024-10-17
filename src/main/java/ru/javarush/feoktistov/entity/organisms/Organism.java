@@ -16,7 +16,6 @@ public abstract class Organism {
     protected double weight;
     protected int maxCount;
     protected String emoji;
-
     protected final int multiplyChance;
 
     protected Organism(OrganismType type) {
@@ -92,11 +91,11 @@ public abstract class Organism {
                 '}';
     }
 
-    protected void increaseWeight(double weight) {
+    public void increaseWeight(double weight) {
         this.weight += weight;
     }
 
-    protected void decreaseWeight(double weight) {
+    public void decreaseWeight(double weight) {
         this.weight -= weight;
     }
 

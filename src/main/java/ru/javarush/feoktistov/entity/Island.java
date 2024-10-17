@@ -1,5 +1,6 @@
 package ru.javarush.feoktistov.entity;
 
+import ru.javarush.feoktistov.util.PrinterStats;
 import ru.javarush.feoktistov.util.PropertiesReader;
 
 public class Island {
@@ -35,9 +36,12 @@ public class Island {
     public void startLifeInLocs() {
         for(int i = 0; i < locations.length; i++) {
             for(int j = 0; j < locations[i].length; j++) {
+                locations[i][j].animalsFeelsHungry();
+                locations[i][j].growPlants();
                 locations[i][j].eatAnimals();
-                locations[i][j].multiplyAnimals();
                 locations[i][j].moveAnimals();
+
+
             }
         }
     }

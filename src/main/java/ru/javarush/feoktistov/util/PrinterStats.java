@@ -18,7 +18,7 @@ public class PrinterStats {
         System.out.println();
     }
 
-    public static void printStatisticsIsland() {
+    public static synchronized void printStatisticsIsland() {
         System.out.print("Количество травы и животных на острове: | ");
         for(OrganismType type: OrganismType.values()) {
             String emoji = PropertiesReader.getEmojiOfOrganism(type);

@@ -10,6 +10,7 @@ import ru.javarush.feoktistov.util.PropertiesReader;
 import ru.javarush.feoktistov.util.Randomizer;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Location {
 
@@ -20,7 +21,7 @@ public class Location {
     public Location(int i, int j) {
         this.positionY = i;
         this.positionX = j;
-        this.population = new EnumMap<>(OrganismType.class);
+        this.population = new ConcurrentHashMap<>();
     }
 
     public int getPositionY() {
@@ -52,25 +53,27 @@ public class Location {
         }
     }
 
-    public void growPlants() {
+    public synchronized void growPlants() {
         List<Organism> plants = population.get(OrganismType.PLANT);
         for(int i = 0; i < plants.size(); i++) {
             plants.get(i).multiply(this);
         }
     }
 
-    public void multiplyAnimals() {
+    public synchronized void multiplyAnimals() {
         for(OrganismType type: population.keySet()) {
             if(type != OrganismType.PLANT) {
                 List<Organism> organisms = population.get(type);
                 for(int i = 0; i < organisms.size(); i++) {
-                    organisms.get(i).multiply(this);
+                    Animal animal = (Animal) organisms.get(i);
+                    animal.multiply(this);
                 }
+
             }
         }
     }
 
-    public void eatAnimals() {
+    public synchronized void eatAnimals() {
         for(OrganismType type: population.keySet()) {
             if(type != OrganismType.PLANT) {
                 List<Organism> organisms = population.get(type);
@@ -82,13 +85,29 @@ public class Location {
         }
     }
 
-    public void moveAnimals() {
+    public synchronized void moveAnimals() {
         for(OrganismType type: population.keySet()) {
             if(type != OrganismType.PLANT) {
                 List<Organism> organisms = population.get(type);
                 for(int i = 0; i < organisms.size(); i++) {
                     Animal animal = (Animal) organisms.get(i);
                     animal.move(this);
+                }
+            }
+        }
+    }
+
+    public synchronized void animalsFeelsHungry() {
+        for(OrganismType type: population.keySet()) {
+            if(type != OrganismType.PLANT) {
+                double weightLosesPerDay = (PropertiesReader.getWeightOfOrganism(type) * PropertiesReader.getPercentOfWeightLosesPerDay())/100;
+                List<Organism> organisms = population.get(type);
+                for(int i = 0; i < organisms.size(); i++) {
+                    Animal animal = (Animal) organisms.get(i);
+                    animal.decreaseWeight(weightLosesPerDay);
+                    if(animal.getWeight() <= 0 || animal.getWeight() > PropertiesReader.getWeightOfOrganism(type) * 2) {
+                        animal.die(this);
+                    }
                 }
             }
         }

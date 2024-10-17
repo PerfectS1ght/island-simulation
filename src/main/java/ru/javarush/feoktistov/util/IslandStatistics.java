@@ -31,4 +31,21 @@ public class IslandStatistics {
         }
         return result;
     }
+
+    public static boolean isAnyoneAliveOnIsland() {
+        int result = 0;
+        for(OrganismType type: OrganismType.values()) {
+            if(type == OrganismType.PLANT) {
+                continue;
+            }
+            result += quantityOfOrganismTypeOnIsland(type);
+        }
+        return result > 0;
+    }
+
+    public static boolean isLocationFullOfThisType(OrganismType type, Location location) {
+        int maxCount = PropertiesReader.getMaxCountOfOrganism(type);
+        int currentQuantityOnLocation = quantityOfOrganismTypeOnLocation(type, location);
+        return currentQuantityOnLocation >= maxCount;
+    }
 }

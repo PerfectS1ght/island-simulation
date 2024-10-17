@@ -70,6 +70,19 @@ public class PropertiesReader {
         }
     }
 
+    public static double getPercentOfWeightLosesPerDay() {
+        String value = getProperty("percentOfWeight.animal");
+        try {
+            double result = Double.parseDouble(value);
+            if(result < 0) {
+                throw new IllegalArgumentException("Percent of Weight loses Per Day in properties file cannot be negative");
+            }
+            return result;
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Failed to parse percent of weight in properties file" + e.getMessage());
+        }
+    }
+
     public static String getEmojiOfOrganism(OrganismType type) {
         String value = getProperty("emoji." + type.toString().toLowerCase());
         if(value.isEmpty() || value.isBlank()) {
