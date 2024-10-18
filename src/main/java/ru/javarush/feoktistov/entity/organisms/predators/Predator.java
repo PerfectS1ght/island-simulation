@@ -8,4 +8,5 @@ public abstract class Predator extends Animal {
     protected Predator(OrganismType type) {
         super(type);
     }
+
 }

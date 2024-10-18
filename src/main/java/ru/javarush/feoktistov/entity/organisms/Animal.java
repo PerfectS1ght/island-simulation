@@ -90,40 +90,32 @@ public abstract class Animal extends Organism {
         double eatenFood = 0;
         Map<OrganismType, List<Organism>> population = location.getPopulation();
 
-        // Проходим по всем типам организмов в популяции
         for (Map.Entry<OrganismType, List<Organism>> pair : population.entrySet()) {
             if (!isStillHungry(eatenFood)) {
                 break;
             }
-
             OrganismType key = pair.getKey();
             int chanceToEat;
-
-            // Пропускаем, если тип совпадает или вероятность поедания равна 0
             if (this.getType() == key || (chanceToEat = PropertiesReader.getProbabilityOfOrganismEating(this.getType(), key)) == 0) {
                 continue;
             }
 
-            // Используем Iterator для удаления организмов
             List<Organism> organisms = pair.getValue();
             Iterator<Organism> iterator = organisms.iterator();
 
             while (iterator.hasNext()) {
                 Organism organism = iterator.next();
-
-                // Проверяем, может ли животное поедать данный организм
                 if (Randomizer.canDoIt(chanceToEat)) {
                     eatenFood += organism.getWeight();
-                    iterator.remove(); // Удаляем организм из списка
-
+                    iterator.remove();
                     if (!isStillHungry(eatenFood)) {
-                        break; // Если животное больше не голодно, выходим из цикла
+                        break;
                     }
                 }
             }
         }
 
-        this.increaseWeight(eatenFood); // Увеличиваем вес животного на количество съеденной пищи
+        this.increaseWeight(eatenFood);
     }
 
     public void move(Location location) {

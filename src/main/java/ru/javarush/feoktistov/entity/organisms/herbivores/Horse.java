@@ -7,4 +7,5 @@ public class Horse extends Herbivore {
     public Horse() {
         super(OrganismType.HORSE);
     }
+
 }

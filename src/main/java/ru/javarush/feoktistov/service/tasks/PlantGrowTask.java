@@ -1,4 +1,4 @@
-package ru.javarush.feoktistov.service;
+package ru.javarush.feoktistov.service.tasks;
 
 import ru.javarush.feoktistov.entity.Location;
 
@@ -14,6 +14,5 @@ public class PlantGrowTask implements Runnable {
     public void run() {
         location.growPlants();
     }
-
 
 }

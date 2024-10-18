@@ -7,4 +7,5 @@ public class Goat extends Herbivore {
     public Goat() {
         super(OrganismType.GOAT);
     }
+
 }

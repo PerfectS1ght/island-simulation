@@ -9,7 +9,6 @@ import ru.javarush.feoktistov.util.OrganismType;
 public class OrganismFactory {
 
     public static Organism createOrganism(OrganismType type) {
-
         switch (type) {
             case WOLF:
                 return new Wolf();

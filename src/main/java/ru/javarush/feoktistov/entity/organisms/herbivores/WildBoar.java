@@ -7,4 +7,5 @@ public class WildBoar extends Herbivore {
     public WildBoar() {
         super(OrganismType.WILD_BOAR);
     }
+
 }

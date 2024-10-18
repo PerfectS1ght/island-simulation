@@ -53,14 +53,14 @@ public class Location {
         }
     }
 
-    public void growPlants() {
+    public synchronized void growPlants() {
         List<Organism> plants = population.get(OrganismType.PLANT);
         for(int i = 0; i < plants.size(); i++) {
             plants.get(i).multiply(this);
         }
     }
 
-    public void multiplyAnimals() {
+    public synchronized void multiplyAnimals() {
         for(OrganismType type: population.keySet()) {
             if(type != OrganismType.PLANT) {
                 List<Organism> organisms = population.get(type);
@@ -73,7 +73,7 @@ public class Location {
         }
     }
 
-    public void eatAnimals() {
+    public synchronized void eatAnimals() {
         for(OrganismType type: population.keySet()) {
             if(type != OrganismType.PLANT) {
                 List<Organism> organisms = population.get(type);
@@ -85,7 +85,7 @@ public class Location {
         }
     }
 
-    public void moveAnimals() {
+    public synchronized void moveAnimals() {
         for(OrganismType type: population.keySet()) {
             if(type != OrganismType.PLANT) {
                 List<Organism> organisms = population.get(type);
@@ -97,7 +97,7 @@ public class Location {
         }
     }
 
-    public void animalsFeelsHungry() {
+    public synchronized void animalsFeelsHungry() {
         for(OrganismType type: population.keySet()) {
             if(type != OrganismType.PLANT) {
                 double weightLosesPerDay = (PropertiesReader.getWeightOfOrganism(type) * PropertiesReader.getPercentOfWeightLosesPerDay());
@@ -105,7 +105,7 @@ public class Location {
                 for(int i = 0; i < organisms.size(); i++) {
                     Animal animal = (Animal) organisms.get(i);
                     animal.decreaseWeight(weightLosesPerDay);
-                    if(animal.getWeight() <= 0 || animal.getWeight() > PropertiesReader.getWeightOfOrganism(type) * 2) {
+                    if(animal.getWeight() <= 0 ) {
                         animal.die(this);
                     }
                 }

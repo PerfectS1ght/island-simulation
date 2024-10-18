@@ -39,6 +39,25 @@ public class PropertiesReader {
         return result;
     }
 
+    public static int getCountOfStepsSimulation() {
+        String value = getProperty("island.simulationStep");
+        int result = Integer.parseInt(value);
+        if(result <= 0) {
+            throw new IllegalArgumentException("The count of Simulation's steps cannot be negative or Zero");
+        }
+        return result;
+    }
+
+    public static int getDurationOfStep() {
+        String value = getProperty("island.stepDuration");
+        int result = Integer.parseInt(value);
+        if(result < 0) {
+            throw new IllegalArgumentException("The duration of Simulation's step cannot be negative");
+        }
+        return result;
+    }
+
+
     public static int getMultiplyChance(OrganismType type) {
         String value;
         if(type == OrganismType.PLANT) {

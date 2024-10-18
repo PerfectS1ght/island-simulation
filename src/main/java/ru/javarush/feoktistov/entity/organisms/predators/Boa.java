@@ -7,4 +7,5 @@ public class Boa extends Predator {
     public Boa() {
         super(OrganismType.BOA);
     }
+
 }

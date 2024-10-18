@@ -7,4 +7,5 @@ public class Bear extends Predator {
     public Bear() {
         super(OrganismType.BEAR);
     }
+
 }

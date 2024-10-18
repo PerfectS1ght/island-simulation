@@ -7,4 +7,5 @@ public class Fox extends Predator {
     public Fox() {
         super(OrganismType.FOX);
     }
+
 }

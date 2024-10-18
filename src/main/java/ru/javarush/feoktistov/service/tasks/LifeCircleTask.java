@@ -1,8 +1,10 @@
-package ru.javarush.feoktistov.service;
+package ru.javarush.feoktistov.service.tasks;
 
 import ru.javarush.feoktistov.entity.Location;
 
-public class LifeCircleTask implements Runnable {
+import java.util.concurrent.Callable;
+
+public class LifeCircleTask implements Callable {
 
     private final Location location;
 
@@ -11,8 +13,10 @@ public class LifeCircleTask implements Runnable {
     }
 
     @Override
-    public void run() {
+    public Object call() throws Exception {
         doCircleOfLifeInLocation();
+
+        return null;
     }
 
     private void doCircleOfLifeInLocation() {
@@ -21,4 +25,5 @@ public class LifeCircleTask implements Runnable {
         location.multiplyAnimals();
         location.moveAnimals();
     }
+
 }
